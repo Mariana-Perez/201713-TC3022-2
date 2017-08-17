@@ -5,6 +5,7 @@ AUTOR: A01376131 MARIANA PÉREZ SÁNCHEZ
 ********************/
 
 #include <iostream>
+#include "Circle.h"
 
 //Perimetro rectangulo
 int PerimetroRectangulo(int base, int altura)
@@ -107,7 +108,7 @@ void PiramideEstrellas(int n)
 //Flecha de estrellas
 void FlechaEstrellas(int n)
 {
-	for (int i = 1; i <= n; ++i) {
+	for (int  i = 1; i <= n; ++i) {
 		for (int j = 1; j <= i; ++j) {
 			std::cout << "*";
 		}
@@ -213,8 +214,21 @@ int main()
 	NumeroPrimo(4);
 
 
+	// Hacer un Circle
+	//Creamos el objeto con el constructor que escojamos en este caso el que pide la variable r
+	Circle killme(5);
+	//Mandamos a llamar  el radio del constructor que pide r
+	std::cout << killme.GetArea() << std::endl;
+
+
+
+
+
 	std::cin.get();
 	return 0;
+
+
+
 }
 
 
