@@ -5,239 +5,70 @@ AUTOR: A01376131 MARIANA PÉREZ SÁNCHEZ
 ********************/
 
 #include <iostream>
-#include "Circle.h"
-#include "Rectangle.h"
-#include "Employee.h"
+#include <GL/glew.h>
+#include <GL/freeglut.h>
 
-//Perimetro rectangulo
-int PerimetroRectangulo(int base, int altura)
+void MainLoop()
 {
-	int resultadoPerimetro;
-	resultadoPerimetro = base * 2 + altura * 2;
-	return resultadoPerimetro;
-}
+	//Borramos el buffer de color y profundidades siempre al inicio de un nuevo frame
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
+	//!!Warning!!! Esto es OpenGL clásico y no lo vamos a volver a usar en todo el semestre.
+	glBegin(GL_TRIANGLES);
 
-//Area triangulo
-float AreaTriangulo(float base, float altura)
-{
-	float resultadoArea;
-	resultadoArea = (base* altura) / 2;
-	return resultadoArea;
+	glColor3f(1.0F,0.0f,0.0f);
+	glVertex2f(-1.0f,-1.0f);
 
-}
+	glColor3f(0.0F, 1.0f, 0.0f);
+	glVertex2f(1.0f, -1.0f);
 
-//Numero mayor
-int Mayor(int numero1, int numero2, int numero3) 
-{
-	int numeroMayor;
-	numeroMayor = numero1;
+	glColor3f(0.0F, 0.0f, 1.0f);
+	glVertex2f(0.0f, 1.0f);
 
-	if (numero2 > numeroMayor)
-		numeroMayor = numero2;
-
-	if (numero3 > numeroMayor)
-		numeroMayor = numero3;
-
-	return numeroMayor;
-}
-
-//Numero menor
-int Menor(int numero1, int numero2, int numero3)
-{
-	int numeroMenor;
-	numeroMenor = numero1;
-
-	if (numero2 < numeroMenor)
-		numeroMenor = numero2;
-
-	if (numero3 < numeroMenor)
-		numeroMenor = numero3;
-
-	return numeroMenor;
-}
-
-//Fila de estrellas
-void FilaEstrellas(int n)
-{
-	int contador = 0;
-	while (contador != n) {
-		if (contador == n - 1)
-		{
-			std::cout << "*" << std::endl;
-		}
-		else {
-			std::cout << "*";
-		}
-		contador++;
-	}
-
+	glEnd();
+	//Fin del WARNING
+	//To do:RENDER
+	//Intercambiar los buffer (el que se estaba rendereando con el que se estaba mostrando )
+	glutSwapBuffers();
 }
 
 
-//Matriz de estrellas
-void MatrizEstrellas(int n)
+int main(int argc, char* argv[])
 {
-	int contador = 0;
+	//Inicializamos freeglut.
+	//Freegluy se encanrga de generar ventanas y manejar ventanas
+	//Utilizamos freeglut para crear una ventana donde vamos a dibujar
+	glutInit(&argc,argv);
+	//Tenemos que informar que queremos trabajar con el pipeline clasico
+	//Eso es OpenGl viejito.
+	glutInitContextProfile(GLUT_COMPATIBILITY_PROFILE);
+	//Freeglut nos permite configurar eventos que ocurren en la ventana
+	//Un evento que nos interesa es cuando alguien cierrra la ventana.
+	//En este caso, simplemete dejamos de renderear y terminamos el programa.
+	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
+	//Configurando el framebuffer. En este caso estamos solicitando un buffer 
+	//de color true color RGBA, un buffer de profundidad y un segundo buffer
+	//para renderear(evitamos parpadeos al renderear).
+	glutInitDisplayMode( GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE);
+	//Solicitamos una ventana de 400x400 pixeles
+	glutInitWindowSize(400, 400);
+	//Creamos y abrimos la ventana con un título personalizado
+	glutCreateWindow("Hellow word OpenGL");
 
-	while (contador != n) {
-		int contador2 = 0;
-		while (contador2 != n) {
-			if (contador2 == n - 1)
-			{
-				std::cout << "*" << std::endl;
-			}
-			else {
-				std::cout << "*";
-			}
-			contador2++;
-		}
-		contador++;
-	}
-}
+	//Asociar una función de render. Esta función se mandara a llamar dibujar un frame
+	
+	glutDisplayFunc(MainLoop);
+	
+	//Inicializamos GLEW. Esta libreria se encanga de obtener el API del OpenGl de nuestra tarjeta de video.Shame on You Microsoft
+	glewInit();
+	//Configurar OpenGL.Este es el color por default del buffer de color 
+	//en el Framebuffer
+	glClearColor(1.0f, 1.0f, 0.5f, 1.0f);
 
-//Piramide de estrellas
-void PiramideEstrellas(int n)
-{
-	for (int i = 1; i <= n; ++i) {
-		for (int j = 1; j <= i; ++j) {
-			std::cout << "*";
-		}
-		std::cout << "\n";
-	}
+	//Iniciamos la aplicación gráfica.El main se oausará en esta línea hasta que se cierre la ventana de OpenGl
+	glutMainLoop();
 
-}
-
-//Flecha de estrellas
-void FlechaEstrellas(int n)
-{
-	for (int  i = 1; i <= n; ++i) {
-		for (int j = 1; j <= i; ++j) {
-			std::cout << "*";
-		}
-	std::cout << "\n";
-
-	}
-	for (int i = n - 1; i >= 1; --i) {
-		for (int j = 1; j <= i; ++j) {
-			std::cout << "*";
-		}
-	std::cout << "\n";
-	}
-
-}
-
-
-//Sucesion Fibonacci
-void Fibonacci(int n)
-{
-	int contador = 1;
-	int fibonacci = 1;
-	int f1 = 1;
-	int f2 = 1;
-	std::cout << "0 ";
-	std::cout << f1 << " ";
-	while (contador != n) {
-		std::cout << fibonacci << " ";
-		fibonacci = f1 + f2;
-		f1 = f2;
-		f2 = fibonacci;
-		contador++;
-
-		if (contador == n) {
-			std::cout << "\n";
-		}
-	}
-
-}
-
-//¿Es primo?
-bool NumeroPrimo(int numero)
-{
-	int a = 0;
-	for (int i = 1; i < (numero + 1); i++) {
-		if (numero %i == 0) {
-			a++;
-		}
-	}
-	if (a != 2) {
-		std::cout << "Verdadero " << "\n";
-	}
-	else {
-		std::cout << "Falso " << "\n";
-	}
 	return 0;
-}
-
-
-int main()
-{
-	//Perimetro rectangulo
-	int perimetro;
-	perimetro = PerimetroRectangulo(18, 14);
-		std::cout << "El perimetro del rectangulo es: " << perimetro << std::endl;
-	
-	//Area triangulo
-	float area;
-	area= AreaTriangulo(6.0f, 9.0f);
-		std::cout << "El area del triangulo es: " << area << std::endl;
-
-	//Numero mayor
-	int mayor;
-    mayor= Mayor (15, 9, 6);
-		std::cout << "El numero mayor es: " << mayor << std::endl;
-
-	//Numero menor
-	int menor;
-	menor = Menor(1, 0, 2);
-		std::cout << "El numero menor es: " << menor << std::endl;
-
-	//Fila de estrellas
-	std::cout << "Fila de estrellas: " << std::endl;
-	FilaEstrellas(7);
-
-	//Matriz de estrellas
-	std::cout << "Matriz de estrellas: " << std::endl;
-	MatrizEstrellas(6);
-
-	//Piramide de estrellas
-	std::cout << "Piramide de estrellas: " << std::endl;
-	PiramideEstrellas(10);
-
-	//Flecha de estrellas
-	std::cout << "Flecha de estrellas: " << std::endl;
-	FlechaEstrellas(4);
-
-	//Sucesion Fibonacci
-	std::cout << "Sucesion Fibonacci: " << std::endl;
-	Fibonacci(4);
-
-	//¿Es primo?
-	std::cout << "¿Es primo?: " << std::endl;
-	NumeroPrimo(4);
-
-
-	// Hacer un Circle
-	//Creamos el objeto con el constructor que escojamos en este caso el que pide la variable r
-	Circle killme(3);
-	//Mandamos a llamar  el radio del constructor que pide r
-	std::cout << "Area del circulo: " << std::endl;
-	std::cout << killme.GetArea() << std::endl;
-	
-	// Hacer un Ractangle
-	//Creamos el objeto con el constructor que escojamos en este caso el que pide la variable r
-	
-	Rectangle myrec(1.0f,2.0f);
-	std::cout << "Perimetro del rectangulo: " << std::endl;
-	std::cout << myrec.GetHeight() << std::endl;
-
-	//Hacer un Empleado
-	Employee empleado (01376131, "Mariana", "Pérez", 21);
-	std::cout << empleado.Print() << std::endl;
-
-
-	std::cin.get();
-	return 0;
-
 
 
 }
