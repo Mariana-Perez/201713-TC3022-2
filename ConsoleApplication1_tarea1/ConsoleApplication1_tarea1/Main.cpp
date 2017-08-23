@@ -1,11 +1,13 @@
 /*******************
 MATERIA: GRÁFICAS COMPUTACIONALES
-FECHA: 16 AGOSTO 2017
+FECHA: 23 AGOSTO 2017
 AUTOR: A01376131 MARIANA PÉREZ SÁNCHEZ
 ********************/
 
 #include <iostream>
 #include "Circle.h"
+#include "Rectangle.h"
+#include "Employee.h"
 
 //Perimetro rectangulo
 int PerimetroRectangulo(int base, int altura)
@@ -216,12 +218,21 @@ int main()
 
 	// Hacer un Circle
 	//Creamos el objeto con el constructor que escojamos en este caso el que pide la variable r
-	Circle killme(5);
+	Circle killme(3);
 	//Mandamos a llamar  el radio del constructor que pide r
+	std::cout << "Area del circulo: " << std::endl;
 	std::cout << killme.GetArea() << std::endl;
+	
+	// Hacer un Ractangle
+	//Creamos el objeto con el constructor que escojamos en este caso el que pide la variable r
+	
+	Rectangle myrec(1.0f,2.0f);
+	std::cout << "Perimetro del rectangulo: " << std::endl;
+	std::cout << myrec.GetHeight() << std::endl;
 
-
-
+	//Hacer un Empleado
+	Employee empleado (01376131, "Mariana", "Pérez", 21);
+	std::cout << empleado.Print() << std::endl;
 
 
 	std::cin.get();

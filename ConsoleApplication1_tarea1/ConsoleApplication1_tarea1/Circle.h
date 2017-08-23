@@ -16,12 +16,13 @@ class Circle
 
 
 		//Metodos
+		//Get's
 		double GetRadius();
 		double GetArea();
 		//Cuando se implementa un metodo con variables tipo string se pone std:: 
 		std::string GetColor();
 
-
+		//Set's
 		void SetRadius(double r);
 		void SetColor(std::string c);
 
