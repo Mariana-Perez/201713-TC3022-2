@@ -1,3 +1,8 @@
+/*******************
+MATERIA: GRÁFICAS COMPUTACIONALES
+FECHA: 05 Septiembre 2017
+AUTOR: A01376131 MARIANA PÉREZ SÁNCHEZ
+********************/
 #pragma once
 #include <string>
 

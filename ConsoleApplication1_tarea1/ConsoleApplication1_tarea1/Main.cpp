@@ -1,6 +1,6 @@
 /*******************
 MATERIA: GRÁFICAS COMPUTACIONALES
-FECHA: 23 AGOSTO 2017
+FECHA: 05 Septiembre 2017
 AUTOR: A01376131 MARIANA PÉREZ SÁNCHEZ
 ********************/
 
