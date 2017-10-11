@@ -111,7 +111,7 @@ void Initialize()
 	glGenBuffers(1, &colorsVBO);
 	glBindBuffer (GL_ARRAY_BUFFER, colorsVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3)*colors.size(),
-		positions.data(), GL_STATIC_DRAW);
+		colors.data(), GL_STATIC_DRAW);
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
