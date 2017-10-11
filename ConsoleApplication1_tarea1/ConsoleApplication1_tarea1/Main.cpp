@@ -1,6 +1,7 @@
 /*******************
 MATERIA: GRÁFICAS COMPUTACIONALES
-FECHA: 06 Septiembre 2017
+FECHA: 06
+Septiembre 2017
 AUTOR: A01376131 MARIANA PÉREZ SÁNCHEZ
 ********************/
 
@@ -9,13 +10,17 @@ AUTOR: A01376131 MARIANA PÉREZ SÁNCHEZ
 #include <GL/freeglut.h>
 #include <glm/glm.hpp>
 #include <vector>
-//#include "InputFile.h"
+#include "InputFile.h"
 
 
 
 
 //Identificador del manager de VBOs para un conjunto de vertices
 GLuint vao;
+
+//Identificador del manager de shaders (ShaderProgram)
+GLuint shaderProgram;
+
 
 
 //Función que va a inicializar toda la memoria del programa
@@ -43,15 +48,39 @@ void Initialize()
 	positions.push_back(glm::vec2((1.0f)*(glm::cos(glm::radians(18.0f))), (1.0f)*(glm::sin(glm::radians(18.0f))))); //2
 
 
-	////Vamos a crear una lista para almacenar colores RGB y esta lista está en CPU y RAM
-	//std::vector<glm::vec3> colors;
-	////RGB ->ROJO
-	//colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
-	////RGB ->VERDE
-	//colors.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
-	////RGB ->AZUL
-	//colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
+	//Vamos a crear una lista para almacenar colores RGB y esta lista está en CPU y RAM
+	std::vector<glm::vec3> colors;
+	
+	//RGB ->AZUL
+	colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
+	//RGB ->AZUL
+	colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
+	//RGB ->AZUL
+	colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
+	//RGB ->AZUL
+	colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
+	//RGB ->VERDE
+	colors.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
+	//RGB ->VERDE
+	colors.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
+	//RGB ->VERDE
+	colors.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
+	//RGB ->VERDE
+	colors.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
+	//RGB ->ROJO
+	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+	//RGB ->ROJO
+	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+	//RGB ->ROJO
+	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+	//RGB ->ROJO
+	colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+	
 
+	
+	
+	
+	
 
 	//Creamos un VAO y almacenamos el id en la variable vao
 	//Este manager de VOBs
@@ -78,20 +107,83 @@ void Initialize()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 
-	/*GLuint colorsVBO;
+	GLuint colorsVBO;
 	glGenBuffers(1, &colorsVBO);
 	glBindBuffer (GL_ARRAY_BUFFER, colorsVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3)*colors.size(),
 		positions.data(), GL_STATIC_DRAW);
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);*/
-
-
-
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	//Ya no quiero utilizar el VAO ya no se asociaran más VBOs a este VAO;
 	glBindVertexArray(0);
+
+
+	InputFile ifile;
+
+	//Leemos el codigo fuente del vertex shader con la clase 
+	//auxiliar INPUTFILE
+	ifile.Read("Default.vert");
+	//Obtenemos los contenidos leidos y los almacenamos en un string vertexSource
+	std::string vertexSource = ifile.GetContents();
+	//Hacemos un cast (conversión de tipo de dato) porque no le podemos mandar string a OpenGL.
+	//Necesitamos mandarle const GLchar*
+	const GLchar *vertexSource_c =(const GLchar*)vertexSource.c_str();
+	//Creamos un shader de tipo Vertex Shader y guardamos su id en la variable vertexShaderHandle
+	GLuint vertexShaderHandle= glCreateShader(GL_VERTEX_SHADER);
+	//Le mandamos el codigo fuente que leimos previamente a OpenGL
+	glShaderSource(vertexShaderHandle, 1, &vertexSource_c, nullptr);
+	//Le pedimos que lo compile
+	glCompileShader(vertexShaderHandle);
+
+
+	//Codigo para detectar errores
+	GLint vertexShaderCompileSuccess = 0;
+		glGetShaderiv(vertexShaderHandle, GL_COMPILE_STATUS, &vertexShaderCompileSuccess);
+	if(vertexShaderCompileSuccess==GL_FALSE)
+	{
+		GLint logLength = 0;
+		glGetShaderiv(vertexShaderHandle, GL_INFO_LOG_LENGTH, &logLength);
+		if (logLength > 0)
+		{
+			std::vector<GLchar>compileLog(logLength);
+			glGetShaderInfoLog(vertexShaderHandle, logLength, &logLength, &compileLog[0]);
+
+			for (int i = 0; i < logLength; i++)
+			{
+				std::cout << compileLog[i];
+			
+			}
+
+			std::cout << std::endl;
+
+		}
+		std::cout << "Shader Default.vert did not compiled." << std::endl;
+	}
+
+
+
+	ifile.Read("Default.frag");
+	std::string fragmentSource = ifile.GetContents();
+	const GLchar *fragmentSource_c = (const GLchar*)fragmentSource.c_str();
+	GLuint fragmentShaderHandle = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentShaderHandle, 1, &fragmentSource_c, nullptr);
+	glCompileShader(fragmentShaderHandle);
+
+	//Creando el manager de los shaders.
+	//Alel id en la variable shaderProgrammacenamos 
+	shaderProgram = glCreateProgram();
+	//Este manager va administrar el vertex shader con el identificador vertexShaderHandle
+	glAttachShader(shaderProgram, vertexShaderHandle);
+	//Este manager va a administrar el fragment shader con el identificador fragmentShaderHandle
+	glAttachShader(shaderProgram, fragmentShaderHandle);
+	//Asociamos el indice del buffer (VBO) de posiciones con el nombre de la variable correspondiente en el shader
+	glBindAttribLocation(shaderProgram, 0, "VertexPosition");
+	//Asociamos el indice del buffer (VBO) de colores con el nombre de la variable correspondiente en el shader
+	glBindAttribLocation(shaderProgram, 1, "VertexColor");
+	//Verificamos que las etapas de los shader pueden trabajar en conjunto 
+	glLinkProgram(shaderProgram);
 
 }
 
@@ -100,8 +192,8 @@ void MainLoop()
 	//Borramos el buffer de color y profundidades siempre al inicio de un nuevo frame
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
-	//Paso 1:
-
+	//Paso 1: Activar el prorama shader (manager)
+	glUseProgram(shaderProgram);
 	//Paso 2:Activar un VAO
 	glBindVertexArray(vao);
 	//Paso 3:Dibujamos
@@ -109,8 +201,8 @@ void MainLoop()
 	//Paso 4: Desactivamos el VAO
 	glBindVertexArray(0);
 
-	//Paso 5:
-	
+	//Paso 5: Desactivar el programa shader (manager)
+	glUseProgram(0);
 	//Intercambiar los buffer (el que se estaba rendereando con el que se estaba mostrando )
 	glutSwapBuffers();
 }

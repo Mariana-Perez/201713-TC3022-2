@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Archivos de código fuente\Shaders">
+      <UniqueIdentifier>{ebee605d-94b9-4e4a-92b7-f8fd8d2e4f66}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -29,5 +32,13 @@
     <ClInclude Include="InputFile.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Default.vert">
+      <Filter>Archivos de código fuente\Shaders</Filter>
+    </None>
+    <None Include="Default.frag">
+      <Filter>Archivos de código fuente\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
