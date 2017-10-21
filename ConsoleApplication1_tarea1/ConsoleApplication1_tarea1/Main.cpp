@@ -1,7 +1,6 @@
 /*******************
 MATERIA: GRÁFICAS COMPUTACIONALES
-FECHA: 06
-Septiembre 2017
+FECHA: 20 Octubre 2017
 AUTOR: A01376131 MARIANA PÉREZ SÁNCHEZ
 ********************/
 
@@ -260,7 +259,6 @@ int main(int argc, char* argv[])
 	std::cout << " Contents: " << contents << std::endl;
 
 	std::cin.get();*/
-
 
 }
 
