@@ -37,7 +37,7 @@ Transform _t3joint;
 Transform _t4joint;
 Transform _t5joint;
 Transform _t6joint;
-//float angulo;
+
 
 // Función que va a inicializar toda la memoria del programa.
 void Initialize()
