@@ -3,7 +3,7 @@
 
 Camera::Camera()
 {
-	SetPerspective(1.0f, 1000.0f, 60.0f, 1.0f);
+	SetPerspective(1.0f, 1000.0f, 60.0f, 10.0f);
 	_viewMatrix = glm::inverse(_transform.GetModelMatrix());
 }
 
