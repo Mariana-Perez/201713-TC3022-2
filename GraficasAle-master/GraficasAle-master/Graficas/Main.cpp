@@ -1,7 +1,9 @@
 /*********************************************************
 Materia: Gráficas Computacionales
-Fecha: 16 de agosto del 2017
-Autor: A01376131 Mariana Pérez Sánchez
+Fecha: 28 de noviembre del 2017
+Proyecto final– 
+Alejandra María Pérez Alemán_INTEGRANTE_A 
+Mariana Pérez Sánchez_INTEGRANTE_B
 *********************************************************/
 
 #include <GL/glew.h>
@@ -26,27 +28,31 @@ glm::vec3 PixelPosition;
 glm::vec3 LightPosition;
 glm::vec3 CameraPosition;
 Texture2D myTexture;
+Texture2D tex2;
+Texture2D p;
 Transform _transform;
 Transform _t2;
 Transform _t3;
 Transform _t4;
 Transform _t5;
 Transform _t6;
+Transform _piso;
 Transform _t2joint;
 Transform _t3joint;
 Transform _t4joint;
 Transform _t5joint;
 Transform _t6joint;
-float angulo=0.0f;
-float delta=0.05f;
+float angulo = 0.0f;
+float delta = 0.05f;
+
 
 
 // Función que va a inicializar toda la memoria del programa.
 void Initialize()
 {
-	
-	
-	
+
+
+
 	// Vamos a crear una lista que va a almacenar las posiciones
 	// en 2 dimensiones de un triángulo.
 	// Esto es en CPU y RAM.
@@ -209,6 +215,7 @@ void Initialize()
 	_t3.SetPosition(0.0f, 0.0f, 3.20f);
 	_t5.SetPosition(0.0f, 0.0f, -3.20f);
 	_t6.SetPosition(3.20f, 0.0f, 0.0f);
+	_piso.SetPosition(0.0f, -10.0f, -20.0f);
 
 
 	//Posiciones joint
@@ -222,9 +229,14 @@ void Initialize()
 	LightColor = glm::vec3(1.0f, 1.0f, 1.0f);
 	LightPosition = glm::vec3(-5.0, 5.0, 5.0);
 	CameraPosition = glm::vec3(0.0f, 0.0f, 0.0f);
-	_camera.SetPosition(0.0f, 10.0f, 12.0f);
+	_camera.SetPosition(0.0f, 5.0f, 12.0f);
+	
+	_piso.SetScale(20.0f, 2.0f, 20.0f);
 
 	myTexture.LoadTexture("Princess_Cookie1.png");
+	tex2.LoadTexture("Gal.jpg");
+	p.LoadTexture("descarga.jpg");
+	
 
 
 
@@ -243,18 +255,22 @@ void MainLoop()
 	_t2joint.SetRotation(0.0f, 0.0f, angulo);
 	_t3joint.SetRotation(-angulo, 0.0f, 0.0f);
 	_t4joint.SetRotation(0.0f, 0.0f, -angulo);
-	_t5joint.SetRotation(angulo,0.0f, 0.0f);
+	_t5joint.SetRotation(angulo, 0.0f, 0.0f);
 	_t6joint.SetRotation(0.0f, 0.0f, angulo);
 
 	// Borramos el buffer de color y profundidad siempre al inicio de un nuevo frame.
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
-	_transform.Rotate(0.01f, 0.01f, 0.01f,true);
+
+	_transform.Rotate(0.01f, 0.01f, 0.01f, true);
 
 	_shaderProgram.Activate();
 
+
+
+
 	//BASE
 	_shaderProgram.SetUniformi("DiffuseTexture", 0);
+	_shaderProgram.SetUniformi("Otra", 1);
 	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection() * _transform.GetModelMatrix());
 	_shaderProgram.SetUniformMatrix("modelMatrix", _transform.GetModelMatrix());
 	_shaderProgram.SetUniformf("LightColor", LightColor);
@@ -262,13 +278,18 @@ void MainLoop()
 	_shaderProgram.SetUniformMatrix("normalMatrix", glm::transpose(glm::inverse(glm::mat3(_transform.GetModelMatrix()))));
 	glActiveTexture(GL_TEXTURE0);
 	myTexture.Bind();
+	glActiveTexture(GL_TEXTURE1);
+	tex2.Bind();
 	_mesh.Draw(GL_TRIANGLES);
 	glActiveTexture(GL_TEXTURE0);
 	myTexture.Unbind();
+	glActiveTexture(GL_TEXTURE1);
+	tex2.Unbind();
 
 
 	//CARA 2-DERECHA
 	_shaderProgram.SetUniformi("DiffuseTexture", 0);
+	_shaderProgram.SetUniformi("Otra", 1);
 	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection()* _transform.GetModelMatrix() * _t2joint.GetModelMatrix() * _t2.GetModelMatrix());
 	_shaderProgram.SetUniformMatrix("modelMatrix", _transform.GetModelMatrix() * _t2joint.GetModelMatrix() * _t2.GetModelMatrix());
 	_shaderProgram.SetUniformf("LightColor", LightColor);
@@ -276,13 +297,18 @@ void MainLoop()
 	_shaderProgram.SetUniformMatrix("normalMatrix", glm::transpose(glm::inverse(glm::mat3(_transform.GetModelMatrix() * _t2joint.GetModelMatrix() * _t2.GetModelMatrix()))));
 	glActiveTexture(GL_TEXTURE0);
 	myTexture.Bind();
+	glActiveTexture(GL_TEXTURE1);
+	tex2.Bind();
 	_mesh.Draw(GL_TRIANGLES);
 	glActiveTexture(GL_TEXTURE0);
 	myTexture.Unbind();
+	glActiveTexture(GL_TEXTURE1);
+	tex2.Unbind();
 
 	//CARA 3- ABAJO
 
 	_shaderProgram.SetUniformi("DiffuseTexture", 0);
+	_shaderProgram.SetUniformi("Otra", 1);
 	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection()* _transform.GetModelMatrix() * _t3joint.GetModelMatrix() * _t3.GetModelMatrix());
 	_shaderProgram.SetUniformMatrix("modelMatrix", _transform.GetModelMatrix() * _t3joint.GetModelMatrix() * _t3.GetModelMatrix());
 	_shaderProgram.SetUniformf("LightColor", LightColor);
@@ -290,12 +316,17 @@ void MainLoop()
 	_shaderProgram.SetUniformMatrix("normalMatrix", glm::transpose(glm::inverse(glm::mat3(_transform.GetModelMatrix() * _t3joint.GetModelMatrix() * _t3.GetModelMatrix()))));
 	glActiveTexture(GL_TEXTURE0);
 	myTexture.Bind();
+	glActiveTexture(GL_TEXTURE1);
+	tex2.Bind();
 	_mesh.Draw(GL_TRIANGLES);
 	glActiveTexture(GL_TEXTURE0);
 	myTexture.Unbind();
+	glActiveTexture(GL_TEXTURE1);
+	tex2.Unbind();
 
 	//CARA 4- IZQUIERDA
 	_shaderProgram.SetUniformi("DiffuseTexture", 0);
+	_shaderProgram.SetUniformi("Otra", 1);
 	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection() * _transform.GetModelMatrix() * _t4joint.GetModelMatrix() * _t4.GetModelMatrix());
 	_shaderProgram.SetUniformMatrix("modelMatrix", _transform.GetModelMatrix() * _t4joint.GetModelMatrix() * _t4.GetModelMatrix());
 	_shaderProgram.SetUniformf("LightColor", LightColor);
@@ -303,12 +334,17 @@ void MainLoop()
 	_shaderProgram.SetUniformMatrix("normalMatrix", glm::transpose(glm::inverse(glm::mat3(_transform.GetModelMatrix() * _t4joint.GetModelMatrix() * _t4.GetModelMatrix()))));
 	glActiveTexture(GL_TEXTURE0);
 	myTexture.Bind();
+	glActiveTexture(GL_TEXTURE1);
+	tex2.Bind();
 	_mesh.Draw(GL_TRIANGLES);
 	glActiveTexture(GL_TEXTURE0);
 	myTexture.Unbind();
-	
+	glActiveTexture(GL_TEXTURE1);
+	tex2.Unbind();
+
 	//CARA 5- ARRIBA
 	_shaderProgram.SetUniformi("DiffuseTexture", 0);
+	_shaderProgram.SetUniformi("Otra", 1);
 	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection()* _transform.GetModelMatrix() * _t5joint.GetModelMatrix() * _t5.GetModelMatrix());
 	_shaderProgram.SetUniformMatrix("modelMatrix", _transform.GetModelMatrix() * _t5joint.GetModelMatrix() * _t5.GetModelMatrix());
 	_shaderProgram.SetUniformf("LightColor", LightColor);
@@ -316,12 +352,17 @@ void MainLoop()
 	_shaderProgram.SetUniformMatrix("normalMatrix", glm::transpose(glm::inverse(glm::mat3(_transform.GetModelMatrix() * _t5joint.GetModelMatrix() * _t5.GetModelMatrix()))));
 	glActiveTexture(GL_TEXTURE0);
 	myTexture.Bind();
+	glActiveTexture(GL_TEXTURE1);
+	tex2.Bind();
 	_mesh.Draw(GL_TRIANGLES);
 	glActiveTexture(GL_TEXTURE0);
 	myTexture.Unbind();
-	
+	glActiveTexture(GL_TEXTURE1);
+	tex2.Unbind();
+
 	//Cara extra
 	_shaderProgram.SetUniformi("DiffuseTexture", 0);
+	_shaderProgram.SetUniformi("Otra", 1);
 	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection()* _transform.GetModelMatrix() * _t2joint.GetModelMatrix() * _t2.GetModelMatrix()* _t6joint.GetModelMatrix() * _t6.GetModelMatrix());
 	_shaderProgram.SetUniformMatrix("modelMatrix", _transform.GetModelMatrix() * _t2joint.GetModelMatrix() * _t2.GetModelMatrix()* _t6joint.GetModelMatrix() * _t6.GetModelMatrix());
 	_shaderProgram.SetUniformf("LightColor", LightColor);
@@ -329,15 +370,33 @@ void MainLoop()
 	_shaderProgram.SetUniformMatrix("normalMatrix", glm::transpose(glm::inverse(glm::mat3(_transform.GetModelMatrix() * _t2joint.GetModelMatrix() * _t2.GetModelMatrix()* _t6joint.GetModelMatrix() * _t6.GetModelMatrix()))));
 	glActiveTexture(GL_TEXTURE0);
 	myTexture.Bind();
+	glActiveTexture(GL_TEXTURE1);
+	tex2.Bind();
 	_mesh.Draw(GL_TRIANGLES);
 	glActiveTexture(GL_TEXTURE0);
 	myTexture.Unbind();
+	glActiveTexture(GL_TEXTURE1);
+	tex2.Unbind();
+
 	
+	//Piso
+	_shaderProgram.SetUniformi("DiffuseTexture", 0);
+	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection() * _piso.GetModelMatrix());
+	_shaderProgram.SetUniformMatrix("modelMatrix", _piso.GetModelMatrix());
+	_shaderProgram.SetUniformf("LightColor", LightColor);
+	_shaderProgram.SetUniformf("LightPosition", LightPosition);
+	_shaderProgram.SetUniformMatrix("normalMatrix", glm::transpose(glm::inverse(glm::mat3(_piso.GetModelMatrix()))));
+	glActiveTexture(GL_TEXTURE0);
+	p.Bind();
+	_mesh.Draw(GL_TRIANGLES);
+	glActiveTexture(GL_TEXTURE0);
+	p.Unbind();
+
 	_shaderProgram.Deactivate();
 
-	
 
-	
+
+
 
 	// Intercambiar los buffers (el que se estaba rendereando con el que se estaba
 	// mostrando).
