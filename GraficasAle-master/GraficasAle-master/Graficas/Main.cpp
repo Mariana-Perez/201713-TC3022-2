@@ -1,6 +1,6 @@
 /*********************************************************
 Materia: Gráficas Computacionales
-Fecha: 16 de agosto del 201
+Fecha: 16 de agosto del 2017
 Autor: A01376131 Mariana Pérez Sánchez
 *********************************************************/
 
@@ -37,6 +37,8 @@ Transform _t3joint;
 Transform _t4joint;
 Transform _t5joint;
 Transform _t6joint;
+float angulo=0.0f;
+float delta=0.05f;
 
 
 // Función que va a inicializar toda la memoria del programa.
@@ -232,9 +234,22 @@ void Initialize()
 
 void MainLoop()
 {
+	angulo += delta;
+	if (angulo >= 90.0f)
+		delta = -0.05f;
+	if (angulo <= 0.0f)
+		delta = 0.05;
+
+	_t2joint.SetRotation(0.0f, 0.0f, angulo);
+	_t3joint.SetRotation(-angulo, 0.0f, 0.0f);
+	_t4joint.SetRotation(0.0f, 0.0f, -angulo);
+	_t5joint.SetRotation(angulo,0.0f, 0.0f);
+	_t6joint.SetRotation(0.0f, 0.0f, angulo);
+
 	// Borramos el buffer de color y profundidad siempre al inicio de un nuevo frame.
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+	
+	_transform.Rotate(0.01f, 0.01f, 0.01f,true);
 
 	_shaderProgram.Activate();
 
@@ -255,10 +270,10 @@ void MainLoop()
 	//CARA 2-DERECHA
 	_shaderProgram.SetUniformi("DiffuseTexture", 0);
 	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection()* _transform.GetModelMatrix() * _t2joint.GetModelMatrix() * _t2.GetModelMatrix());
-	_shaderProgram.SetUniformMatrix("modelMatrix", _t2.GetModelMatrix());
+	_shaderProgram.SetUniformMatrix("modelMatrix", _transform.GetModelMatrix() * _t2joint.GetModelMatrix() * _t2.GetModelMatrix());
 	_shaderProgram.SetUniformf("LightColor", LightColor);
 	_shaderProgram.SetUniformf("LightPosition", LightPosition);
-	_shaderProgram.SetUniformMatrix("normalMatrix", glm::transpose(glm::inverse(glm::mat3(_t2.GetModelMatrix()))));
+	_shaderProgram.SetUniformMatrix("normalMatrix", glm::transpose(glm::inverse(glm::mat3(_transform.GetModelMatrix() * _t2joint.GetModelMatrix() * _t2.GetModelMatrix()))));
 	glActiveTexture(GL_TEXTURE0);
 	myTexture.Bind();
 	_mesh.Draw(GL_TRIANGLES);
@@ -269,10 +284,10 @@ void MainLoop()
 
 	_shaderProgram.SetUniformi("DiffuseTexture", 0);
 	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection()* _transform.GetModelMatrix() * _t3joint.GetModelMatrix() * _t3.GetModelMatrix());
-	_shaderProgram.SetUniformMatrix("modelMatrix", _t3.GetModelMatrix());
+	_shaderProgram.SetUniformMatrix("modelMatrix", _transform.GetModelMatrix() * _t3joint.GetModelMatrix() * _t3.GetModelMatrix());
 	_shaderProgram.SetUniformf("LightColor", LightColor);
 	_shaderProgram.SetUniformf("LightPosition", LightPosition);
-	_shaderProgram.SetUniformMatrix("normalMatrix", glm::transpose(glm::inverse(glm::mat3(_t3.GetModelMatrix()))));
+	_shaderProgram.SetUniformMatrix("normalMatrix", glm::transpose(glm::inverse(glm::mat3(_transform.GetModelMatrix() * _t3joint.GetModelMatrix() * _t3.GetModelMatrix()))));
 	glActiveTexture(GL_TEXTURE0);
 	myTexture.Bind();
 	_mesh.Draw(GL_TRIANGLES);
@@ -282,34 +297,36 @@ void MainLoop()
 	//CARA 4- IZQUIERDA
 	_shaderProgram.SetUniformi("DiffuseTexture", 0);
 	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection() * _transform.GetModelMatrix() * _t4joint.GetModelMatrix() * _t4.GetModelMatrix());
-	_shaderProgram.SetUniformMatrix("modelMatrix", _t4.GetModelMatrix());
+	_shaderProgram.SetUniformMatrix("modelMatrix", _transform.GetModelMatrix() * _t4joint.GetModelMatrix() * _t4.GetModelMatrix());
 	_shaderProgram.SetUniformf("LightColor", LightColor);
 	_shaderProgram.SetUniformf("LightPosition", LightPosition);
-	_shaderProgram.SetUniformMatrix("normalMatrix", glm::transpose(glm::inverse(glm::mat3(_t4.GetModelMatrix()))));
+	_shaderProgram.SetUniformMatrix("normalMatrix", glm::transpose(glm::inverse(glm::mat3(_transform.GetModelMatrix() * _t4joint.GetModelMatrix() * _t4.GetModelMatrix()))));
 	glActiveTexture(GL_TEXTURE0);
 	myTexture.Bind();
 	_mesh.Draw(GL_TRIANGLES);
 	glActiveTexture(GL_TEXTURE0);
 	myTexture.Unbind();
+	
 	//CARA 5- ARRIBA
 	_shaderProgram.SetUniformi("DiffuseTexture", 0);
 	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection()* _transform.GetModelMatrix() * _t5joint.GetModelMatrix() * _t5.GetModelMatrix());
-	_shaderProgram.SetUniformMatrix("modelMatrix", _t5.GetModelMatrix());
+	_shaderProgram.SetUniformMatrix("modelMatrix", _transform.GetModelMatrix() * _t5joint.GetModelMatrix() * _t5.GetModelMatrix());
 	_shaderProgram.SetUniformf("LightColor", LightColor);
 	_shaderProgram.SetUniformf("LightPosition", LightPosition);
-	_shaderProgram.SetUniformMatrix("normalMatrix", glm::transpose(glm::inverse(glm::mat3(_t5.GetModelMatrix()))));
+	_shaderProgram.SetUniformMatrix("normalMatrix", glm::transpose(glm::inverse(glm::mat3(_transform.GetModelMatrix() * _t5joint.GetModelMatrix() * _t5.GetModelMatrix()))));
 	glActiveTexture(GL_TEXTURE0);
 	myTexture.Bind();
 	_mesh.Draw(GL_TRIANGLES);
 	glActiveTexture(GL_TEXTURE0);
 	myTexture.Unbind();
+	
 	//Cara extra
 	_shaderProgram.SetUniformi("DiffuseTexture", 0);
 	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection()* _transform.GetModelMatrix() * _t2joint.GetModelMatrix() * _t2.GetModelMatrix()* _t6joint.GetModelMatrix() * _t6.GetModelMatrix());
-	_shaderProgram.SetUniformMatrix("modelMatrix", _t6.GetModelMatrix());
+	_shaderProgram.SetUniformMatrix("modelMatrix", _transform.GetModelMatrix() * _t2joint.GetModelMatrix() * _t2.GetModelMatrix()* _t6joint.GetModelMatrix() * _t6.GetModelMatrix());
 	_shaderProgram.SetUniformf("LightColor", LightColor);
 	_shaderProgram.SetUniformf("LightPosition", LightPosition);
-	_shaderProgram.SetUniformMatrix("normalMatrix", glm::transpose(glm::inverse(glm::mat3(_t6.GetModelMatrix()))));
+	_shaderProgram.SetUniformMatrix("normalMatrix", glm::transpose(glm::inverse(glm::mat3(_transform.GetModelMatrix() * _t2joint.GetModelMatrix() * _t2.GetModelMatrix()* _t6joint.GetModelMatrix() * _t6.GetModelMatrix()))));
 	glActiveTexture(GL_TEXTURE0);
 	myTexture.Bind();
 	_mesh.Draw(GL_TRIANGLES);
@@ -318,7 +335,7 @@ void MainLoop()
 	
 	_shaderProgram.Deactivate();
 
-	_shaderProgram.Deactivate();
+	
 
 	
 
